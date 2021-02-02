@@ -1,0 +1,7 @@
+numpy
+modelhub-ai
+pydicom
+dcmrtstruct2nii
+nibabel
+keras=1.2.2
+itk
