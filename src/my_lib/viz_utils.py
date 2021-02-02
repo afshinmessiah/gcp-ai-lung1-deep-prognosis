@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
 ## ----------------------------------------
 ## ----------------------------------------
 
-def get_roc_fig(event, event_name, predictors_list, predictors_names):
+def get_roc_fig(axis, colors, event, event_name, predictors_list, predictors_names):
     
   # "event" should be a list or a ndarray
   assert isinstance(event, np.ndarray) or isinstance(event, list)
@@ -47,34 +47,27 @@ def get_roc_fig(event, event_name, predictors_list, predictors_names):
   # if list(s), convert into np.ndarray(s) for simplicity
   for idx, predictor in enumerate(predictors_list):
     if isinstance(predictor, list): predictors_list[idx] = np.array(predictor)
-      
-
-  # plot    
-  fig, ax = plt.subplots(1, 1, figsize = (8, 8))
-  
-  colors = ["tab:orange",
-            "tab:blue"]
    
   for idx, predictor in enumerate(predictors_list):
     fpr, tpr, thresh = metrics.roc_curve(event, predictor)
     roc_auc = metrics.roc_auc_score(event, predictor)
     
-    ax.plot(fpr, tpr, 
-            color = colors[idx],
-            label = '%s : (AUC: %2.3f)'%(predictors_names[idx], roc_auc))
+    axis.plot(fpr, tpr, 
+              color = colors[idx],
+              label = '%s : (AUC: %2.3f)'%(predictors_names[idx], roc_auc))
   
   
-  ax.plot([0, 1], [0, 1], color = "k", linestyle = "dashed", linewidth = .75)
-  ax.legend()
-  ax.set_xlabel('False Positive Rate')
-  ax.set_ylabel('True Positive Rate')
-  ax.set_title("ROC - %s\n"%(event_name))
-  ax.set_xlim([0, 1])
-  ax.set_ylim([0, 1])
+  axis.plot([0, 1], [0, 1], color = "k", linestyle = "dashed", linewidth = .75)
+  axis.legend()
+  axis.set_xlabel('False Positive Rate')
+  axis.set_ylabel('True Positive Rate')
+  axis.set_title("ROC - %s\n"%(event_name))
+  axis.set_xlim([0, 1])
+  axis.set_ylim([0, 1])
   
 ## ----------------------------------------
   
-def plot_km(axis, subgroups_to_plot, labels, colors, num_xticks = 14,
+def plot_km(axis, subgroups_to_plot, labels, colors, num_xticks = 5,
             ci_show = False, show_censors = True, at_risk_counts = False):
   
   # "subgroups_to_plot" should be a list of dataframes
@@ -114,4 +107,41 @@ def plot_km(axis, subgroups_to_plot, labels, colors, num_xticks = 14,
   xticklabels = [str(y) + "y" if y > 0 else "" for y in range(0, num_xticks)]
   axis.set_xticklabels(xticklabels)
 
+  return leg_list
+
+## ----------------------------------------
+
+def plot_distr(axis, colors, attr_list, attr_names, xlim):
+
+  leg_list = list()
+
+  for idx, attr in enumerate(attr_list):
+    
+    leg_entry = matplotlib.patches.Patch(facecolor = colors[idx],
+                                         edgecolor = 'k',
+                                         linewidth = 0.7,
+                                         label = attr_names[idx])
+    
+    leg_list.append(leg_entry)
+    
+    v = axis.violinplot(attr,
+                        showmeans = False,
+                        showextrema = False,
+                        showmedians = False,
+                        vert = False)
+
+    for b in v['bodies']:
+      m = np.mean(b.get_paths()[0].vertices[:, 0])
+      b.get_paths()[0].vertices[:, 1] = np.clip(b.get_paths()[0].vertices[:, 1], 1, np.inf)
+      b.set_color(colors[idx])
+      b.set_alpha(0.8)
+      b.set_linewidth(0.7)
+      b.set_edgecolor("k")
+
+  axis.set_ylabel('Relative Frequency\n')
+  axis.set_yticks([ 1, 1.1, 1.2])
+  axis.set_yticklabels(["0", "0.1", "0.2"])
+  axis.set_ylim([1, 1.3])
+  axis.set_xlim(xlim)
+  
   return leg_list
