@@ -1,0 +1,56 @@
+WITH
+  ct_series AS (
+  SELECT
+    DISTINCT(PatientID),
+    StudyInstanceUID AS ctStudyInstanceUID,
+    SeriesInstanceUID AS ctSeriesInstanceUID
+  FROM
+    `canceridc-data.idc_views.dicom_all`
+  WHERE
+    Source_DOI = "10.7937/K9/TCIA.2015.PF0M9REI"
+    AND Modality = "CT"
+  ORDER BY
+    PatientID),
+  rtstruct_series AS (
+  SELECT
+    DISTINCT(PatientID),
+    StudyInstanceUID AS rtstructStudyInstanceUID,
+    SeriesInstanceUID AS rtstructSeriesInstanceUID
+  FROM
+    `canceridc-data.idc_views.dicom_all`
+  WHERE
+    Source_DOI = "10.7937/K9/TCIA.2015.PF0M9REI"
+    AND Modality = "RTSTRUCT"
+  ORDER BY
+    PatientID),
+  seg_series AS (
+  SELECT
+    DISTINCT(PatientID),
+    StudyInstanceUID AS segStudyInstanceUID,
+    SeriesInstanceUID AS segSeriesInstanceUID
+  FROM
+    `canceridc-data.idc_views.dicom_all`
+  WHERE
+    Source_DOI = "10.7937/K9/TCIA.2015.PF0M9REI"
+    AND Modality = "SEG"
+  ORDER BY
+    PatientID)
+SELECT
+  PatientID,
+  ctStudyInstanceUID,
+  ctSeriesInstanceUID,
+  rtstructStudyInstanceUID,
+  rtstructSeriesInstanceUID,
+  segStudyInstanceUID,
+  segSeriesInstanceUID
+FROM
+  ct_series
+JOIN
+  rtstruct_series
+using (PatientID)
+JOIN
+  seg_series
+USING
+  (PatientID)
+ORDER BY
+  PatientID

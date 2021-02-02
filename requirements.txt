@@ -1,7 +1,8 @@
-numpy
-modelhub-ai
+SimpleITK
 pydicom
-dcmrtstruct2nii
-nibabel
-keras=1.2.2
-itk
+matplotlib
+seaborn
+pandas
+numpy
+sklearn
+lifelines
