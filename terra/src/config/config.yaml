@@ -1,0 +1,10 @@
+data_base_path : '../../data'
+model_base_path : '../../models'
+
+weights_name : "weights.h5"
+arch_json_name : "architecture.json"
+
+dataset_name : 'nsclc-radiomics'
+preproc_dataset_name : 'nsclc-radiomics_preprocessed_pat'
+
+cohort_table_name : 'nsclc-radiomics_table.csv'
