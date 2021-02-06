@@ -10,10 +10,10 @@ By default, the entry point to the container is set to `/bin/bash`, so running t
 sudo docker run -it --rm --name test tfcpu_custom
 ```
 
-From this point, as all the code and data in `gcp-ai-lung1-deep-prognosis` are copied in the container under `/home/terra-test/terra/` during the creation of the latter, to test the pipeline on `LUNG1-001` and `LUNG2-002` run:
+From this point, as all the code and data in `gcp-ai-lung1-deep-prognosis` are copied in the container under `/home/terra-test/` during the creation of the latter, to test the pipeline on `LUNG1-001` and `LUNG2-002` run:
 
 ```
-cd /home/terra-test/terra/
+cd /home/terra-test/
 ````
 
 ```

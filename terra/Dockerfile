@@ -14,7 +14,16 @@ RUN useradd -m -s /bin/bash -N -u $UID $USER
 
 ENV HOME /home/$USER
 
-COPY gcp-ai-lung1-deep-prognosis $HOME
+RUN mkdir /home/$USER/src
+RUN mkdir /home/$USER/data
+RUN mkdir /home/$USER/models
+
+COPY src $HOME/src
+COPY data $HOME/data
+COPY models $HOME/models  
+COPY requirements.txt $HOME
+COPY run_pipeline.sh $HOME
+
 RUN pip3 install -r $HOME/requirements.txt
 
 ENTRYPOINT ["/bin/bash"]
