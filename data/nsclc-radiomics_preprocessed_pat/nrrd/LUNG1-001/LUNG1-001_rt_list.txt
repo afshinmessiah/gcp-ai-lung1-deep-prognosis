@@ -1,4 +1,0 @@
-0|0 255 120|GTV-1
-1|255 192 96|Spinal-Cord
-2|64 64 255|Lung-Left
-3|64 64 255|Lung-Right
