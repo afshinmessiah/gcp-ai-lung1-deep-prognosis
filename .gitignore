@@ -46,4 +46,5 @@ geckodriver.log
 # repo specific - data from IDC buckets and preprocessed data
 data/nsclc-radiomics/
 data/nsclc-radiomics_preprocessed/
-data/nsclc-radiomics_preprocessed_pat/
+
+terra/data/nsclc-radiomics_preprocessed_pat
