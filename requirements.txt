@@ -6,3 +6,5 @@ pandas
 numpy
 sklearn
 lifelines
+pyaml
+keras==2.3.1
