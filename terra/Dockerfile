@@ -8,6 +8,14 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
 RUN apt-get install -y unzip
 RUN apt-get install -y plastimatch
 
+ # google-cloud-sdk separately because it need lsb-release and other prereqs installed above
+ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" \
+ && echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
+ && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+ && apt-get update \
+ && apt-get install -yq --no-install-recommends \
+    google-cloud-sdk
+    
 ENV USER terra-test
 ENV UID 1000
 RUN useradd -m -s /bin/bash -N -u $UID $USER
@@ -24,6 +32,7 @@ COPY models $HOME/models
 COPY requirements.txt $HOME
 COPY run_pipeline.sh $HOME
 
-RUN pip3 install -r $HOME/requirements.txt
+RUN pip3 install -r $HOME/requirements.txt\
+&& pip3 install google-cloud-bigquery
 
 ENTRYPOINT ["/bin/bash"]
