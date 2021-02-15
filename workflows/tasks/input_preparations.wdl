@@ -148,12 +148,6 @@ task QueryInputs
         memory: "1GB"
 
     }
-    # meta
-    # {
-    #     author: "Afshin"
-    #     email: "akbarzadehm@gmail.com"
-    #     description: "This workflow reads CT series instance uids and queries the data from dataset"
-    # }
     output{
         Array[String] out = tmp
         Array[File] json = glob(json_file + '*.json')
