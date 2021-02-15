@@ -1,9 +1,9 @@
 FROM tensorflow/tensorflow:1.15.4-gpu-py3
-
 LABEL maintainer="dennis_bontempi@dfci.harvard.edu"
 LABEL version="1.0"
 LABEL description="Terra Docker for Deep Prognosis."
 
+RUN python3 -m pip install --upgrade pip
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl
 RUN apt-get install -y unzip
 RUN apt-get install -y plastimatch
@@ -15,7 +15,7 @@ RUN apt-get install -y plastimatch
  && apt-get update \
  && apt-get install -yq --no-install-recommends \
     google-cloud-sdk
-    
+
 ENV USER terra-test
 ENV UID 1000
 RUN useradd -m -s /bin/bash -N -u $UID $USER
