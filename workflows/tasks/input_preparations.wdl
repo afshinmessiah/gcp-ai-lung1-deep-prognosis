@@ -22,9 +22,16 @@ task QueryInputs
                         ct_uid: list,
                         rt_uid: list,
                         sg_uid: list):
-        cond_ct = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(ct_uid))
-        cond_rt = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(rt_uid))
-        cond_sg = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(sg_uid))
+        if len(ct_uid) > 1:
+            cond_ct = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(ct_uid))
+            cond_rt = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(rt_uid))
+            cond_sg = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(sg_uid))
+        elif len(ct_uid) == 1:
+            cond_ct = 'WHERE SERIESINSTANCEUID = {}'.format(ct_uid[0])
+            cond_rt = 'WHERE SERIESINSTANCEUID = {}'.format(rt_uid[0])
+            cond_sg = 'WHERE SERIESINSTANCEUID = {}'.format(sg_uid[0])
+
+
         query = """
         WITH
             CT_SERIES AS 
@@ -37,7 +44,7 @@ task QueryInputs
                 FROM
                     \`{0}\`
                 {1}
-                GROUP BY PATIENTID, SERIESINSTANCEUID
+                GROUP BY PATIENTID, SERIESINSTANCEUID, GCS_BUCKET
             ),
             RTSTRUCT_SERIES AS 
             (
@@ -49,7 +56,7 @@ task QueryInputs
                 FROM
                     \`{0}\`
                 {2}
-                GROUP BY PATIENTID, SERIESINSTANCEUID
+                GROUP BY PATIENTID, SERIESINSTANCEUID, GCS_BUCKET
             ),
             SEG_SERIES AS 
             (
@@ -61,7 +68,7 @@ task QueryInputs
                 FROM
                     \`{0}\`
                 {3}
-                GROUP BY PATIENTID, SERIESINSTANCEUID
+                GROUP BY PATIENTID, SERIESINSTANCEUID, GCS_BUCKET
             )
         SELECT
             PATIENTID,
@@ -144,7 +151,7 @@ task QueryInputs
     runtime
     {
         # docker: "biocontainers/plastimatch:v1.7.4dfsg.1-2-deb_cv1"
-        docker: "afshinmha/plastimatch_terra_00:terra_run00"
+        docker: "afshinmha/deep-prognosis:lungs"
         memory: "1GB"
 
     }
