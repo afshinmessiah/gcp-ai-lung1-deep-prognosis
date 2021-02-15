@@ -2,4 +2,4 @@ version: 1.2
 workflows:
   - name: main_pipeline
     subclass: WDL
-    primaryDescriptorPath: /deep_prognosis_pipeline.wdl
+    primaryDescriptorPath: /workflows/deep_prognosis_pipeline.wdl
