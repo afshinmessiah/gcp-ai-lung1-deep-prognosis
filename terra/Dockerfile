@@ -21,14 +21,15 @@ RUN apt-get install -y plastimatch
  && apt-get update \
  && apt-get install -yq --no-install-recommends google-cloud-sdk \
  
-RUN git config core.sparseCheckout true
+
 RUN mkdir deep-prognosis-code
 RUN cd deep-prognosis-code
 RUN git init
-RUN git remote add -f origin <url>
+RUN git remote add -f origin https://github.com/afshinmessiah/gcp-ai-lung1-deep-prognosis.git
+RUN git config core.sparseCheckout true
 RUN echo "terra/src" >> .git/info/sparse-checkout
 RUN echo "terra/models" >> .git/info/sparse-checkout
-RUN git pull origin master
+RUN git pull origin afshin-branch
 RUN cp -r terra/* ../
 
 RUN pip3 install -r $HOME/requirements.txt\
