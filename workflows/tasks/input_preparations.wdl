@@ -27,9 +27,9 @@ task QueryInputs
             cond_rt = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(rt_uid))
             cond_sg = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(sg_uid))
         elif len(ct_uid) == 1:
-            cond_ct = 'WHERE SERIESINSTANCEUID = {}'.format(ct_uid[0])
-            cond_rt = 'WHERE SERIESINSTANCEUID = {}'.format(rt_uid[0])
-            cond_sg = 'WHERE SERIESINSTANCEUID = {}'.format(sg_uid[0])
+            cond_ct = 'WHERE SERIESINSTANCEUID = "{}"'.format(ct_uid[0])
+            cond_rt = 'WHERE SERIESINSTANCEUID = "{}"'.format(rt_uid[0])
+            cond_sg = 'WHERE SERIESINSTANCEUID = "{}"'.format(sg_uid[0])
 
 
         query = """
