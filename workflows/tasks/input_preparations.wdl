@@ -139,6 +139,7 @@ task QueryInputs
                     {input_var_name: vec_data}, fp, indent=4)
 
     j_file_name = '~{json_file}'
+    print(j_file_name)
     p_id = ['~{sep="\', \'"  patient_id}']
     ct_uid = ['~{sep="\', \'"  ct_seriesinstanceuid}']
     rt_uid = ['~{sep="\', \'" rt_seriesinstanceuid}']

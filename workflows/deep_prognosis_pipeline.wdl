@@ -7,9 +7,8 @@ workflow deep_prognosis_workflow {
         Array[String] rt_seriesinstanceuid
         Array[String] sg_seriesinstanceuid
         String dest_bucket_name
-        String json_file
     }
-    
+    String json_file = 'queried_inputs.json'
     call sub_.QueryInputs as external_q_inputs{
         input: patient_id=patient_id,
         ct_seriesinstanceuid=ct_seriesinstanceuid,
