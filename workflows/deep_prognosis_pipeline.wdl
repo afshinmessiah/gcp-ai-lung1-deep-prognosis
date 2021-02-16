@@ -86,7 +86,10 @@ task deep_prognosis_task
         print('dicom_rt_path = {}'.format(dicom_rt_path))
         destination_bucket_name = '~{dest_bucket_path}'
         patient_id = '~{pat_id}'
-        output_dir = '~{output_dir}'
+        output_dir = os.path.abspath('~{output_dir}')
+        print('out dir abs is ', output_dir)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         ct_nrrd_path = os.path.join(output_dir, patient_id + '_ct_resampled.nrrd')
         rt_nrrd_path = os.path.join(output_dir, patient_id + '_rt_resampled.nrrd')
         ct_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_ct_res_crop.nrrd')
