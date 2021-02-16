@@ -71,9 +71,9 @@ task deep_prognosis_task
     String ct_interpolation = 'linear'
     String output_dtype = "int"
     command
-    pwd
-    ls -al
     <<<
+        pwd
+        ls -al
         python3 <<CODE
         import os
         import subprocess
