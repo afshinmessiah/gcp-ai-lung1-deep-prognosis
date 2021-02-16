@@ -22,6 +22,7 @@ task QueryInputs
                         ct_uid: list,
                         rt_uid: list,
                         sg_uid: list):
+        print(ct_uid)
         if len(ct_uid) > 1:
             cond_ct = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(ct_uid))
             cond_rt = 'WHERE SERIESINSTANCEUID IN {}'.format(tuple(rt_uid))
