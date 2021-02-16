@@ -74,6 +74,8 @@ task deep_prognosis_task
     <<<
         pwd
         ls -al
+        cd ~
+        ls -al
         python3 <<CODE
         import os
         import subprocess
