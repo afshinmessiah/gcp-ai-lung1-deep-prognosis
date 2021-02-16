@@ -71,6 +71,8 @@ task deep_prognosis_task
     String ct_interpolation = 'linear'
     String output_dtype = "int"
     command
+    pwd
+    ls -al
     <<<
         python3 <<CODE
         import os
@@ -92,8 +94,8 @@ task deep_prognosis_task
             os.makedirs(output_dir)
         ct_nrrd_path = os.path.join(output_dir, patient_id + '_ct_resampled.nrrd')
         rt_nrrd_path = os.path.join(output_dir, patient_id + '_rt_resampled.nrrd')
-        ct_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_ct_res_crop.nrrd')
-        rt_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_rt_res_crop.nrrd')
+        ct_nrrd_crop_path = os.path.join(output_dir, patient_id + '_ct_res_crop.nrrd')
+        rt_nrrd_crop_path = os.path.join(output_dir, patient_id + '_rt_res_crop.nrrd')
         print('')
         network_architect_json_path = 'models/architecture.json'
         network_weights_path = 'models/wights.h5'
@@ -102,8 +104,8 @@ task deep_prognosis_task
         inference = patient_inference(
             network_architect_json_path,
             network_weights_path,
-            preprocessed_output_path,
-            patient_identity)
+            output_dir,
+            patient_id)
         # export_res_nrrd_from_dicom(
         #     dicom_ct_path,
         #     dicom_rt_path,

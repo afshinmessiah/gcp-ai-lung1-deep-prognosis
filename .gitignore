@@ -50,5 +50,5 @@ data/nsclc-radiomics_preprocessed/
 terra/data/nsclc-radiomics_preprocessed_pat
 
 # some vs code stuff:
-.devcontainer
+.devcontainer*
 .vscode
