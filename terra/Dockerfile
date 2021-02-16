@@ -29,10 +29,12 @@ RUN git remote add -f origin https://github.com/afshinmessiah/gcp-ai-lung1-deep-
 RUN git config core.sparseCheckout true
 RUN echo "terra/src" >> .git/info/sparse-checkout
 RUN echo "terra/models" >> .git/info/sparse-checkout
+RUN echo "terra/requirements.txt" >> .git/info/sparse-checkout
 RUN git pull origin afshin-branch
 RUN cp -r terra/* ../
+RUN cd ..
 
-RUN pip3 install -r $HOME/requirements.txt\
+RUN pip3 install -r requirements.txt\
 && pip3 install google-cloud-bigquery
 
 
