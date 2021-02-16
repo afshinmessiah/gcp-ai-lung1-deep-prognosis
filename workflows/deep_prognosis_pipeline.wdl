@@ -76,21 +76,22 @@ task deep_prognosis_task
         import os
         import subprocess
         import json
-        from patient_convert import patient_convert
-        from patient_preprocess import patient_preprocess
-        from patient_inference import patient_inference
+        from src.patient_convert import patient_convert
+        from src.patient_preprocess import patient_preprocess
+        from src.patient_inference import patient_inference
 
         dicom_ct_path = os.path.dirname('~{dicom_ct_list[0]}')
         print('dicom_ct_path = {}'.format(dicom_ct_path))
         dicom_rt_path = '~{dicom_rt_list[0]}'
         print('dicom_rt_path = {}'.format(dicom_rt_path))
-        destination_bucket_name = 
+        destination_bucket_name = '~{dest_bucket_path}'
         patient_id = '~{pat_id}'
-        output_dir = 
+        output_dir = '~{output_dir}'
         ct_nrrd_path = os.path.join(output_dir, patient_id + '_ct_resampled.nrrd')
         rt_nrrd_path = os.path.join(output_dir, patient_id + '_rt_resampled.nrrd')
         ct_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_ct_res_crop.nrrd')
         rt_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_rt_res_crop.nrrd')
+        print('')
         network_architect_json_path = 'models/architecture.json'
         network_weights_path = 'models/wights.h5'
         patient_convert(dicom_ct_path, dicom_rt_path, output_dir,patient_id)
@@ -118,7 +119,7 @@ task deep_prognosis_task
         # text_file.write(out_text)
         # text_file.close()
         CODE
-        gsutil cp -r '~{output_dir}' 'gs://''~{dest_bucket_path}'
+        gsutil cp -r '~{output_dir}' '~{dest_bucket_path}'
     >>>
     runtime {
         # docker: "biocontainers/plastimatch:v1.7.4dfsg.1-2-deb_cv1"
