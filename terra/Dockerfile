@@ -1,5 +1,6 @@
 FROM tensorflow/tensorflow:1.15.4-gpu-py3
 USER root
+WORKDIR '/'
 LABEL maintainer="dennis_bontempi@dfci.harvard.edu"
 LABEL version="1.0"
 LABEL description="Terra Docker for Deep Prognosis."
