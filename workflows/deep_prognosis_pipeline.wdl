@@ -77,12 +77,14 @@ task deep_prognosis_task
         cd ~
         ls -al
         python3 <<CODE
+        import sys
+        sys.path.insert(1, './src')
         import os
         import subprocess
         import json
-        from src.patient_convert import patient_convert
-        from src.patient_preprocess import patient_preprocess
-        from src.patient_inference import patient_inference
+        from patient_convert import patient_convert
+        from patient_preprocess import patient_preprocess
+        from patient_inference import patient_inference
 
         dicom_ct_path = os.path.dirname('~{dicom_ct_list[0]}')
         print('dicom_ct_path = {}'.format(dicom_ct_path))
