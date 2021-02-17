@@ -24,18 +24,19 @@ RUN apt-get install -y plastimatch
  
 ENV REPO_NAME deep-prognosis-code
 RUN mkdir "${REPO_NAME}"
-RUN cd "${REPO_NAME}"
-RUN git init
-RUN git remote add -f origin https://github.com/afshinmessiah/gcp-ai-lung1-deep-prognosis.git
-RUN git config core.sparseCheckout true
-RUN echo "terra/src" >> .git/info/sparse-checkout
-RUN echo "terra/models" >> .git/info/sparse-checkout
-RUN echo "terra/requirements.txt" >> .git/info/sparse-checkout
-RUN git pull origin afshin-branch
-RUN cd ..
-RUN pwd
-RUN ls -al
-RUN pip3 install -r "/${REPO_NAME}/terra/requirements.txt"\
+&& cd "${REPO_NAME}" \
+&& git init \
+&& git remote add -f origin https://github.com/afshinmessiah/gcp-ai-lung1-deep-prognosis.git \
+&& git config core.sparseCheckout true \
+&& echo "terra/src" >> .git/info/sparse-checkout \
+&& echo "terra/models" >> .git/info/sparse-checkout \
+&& echo "terra/requirements.txt" >> .git/info/sparse-checkout \
+&& git pull origin afshin-branch \
+&& cd .. \
+&& pwd \
+&& ls \
+&& ls '/${REPO_NAME}/*' \
+&& pip3 install -r "/${REPO_NAME}/terra/requirements.txt" \
 && pip3 install google-cloud-bigquery
 
 
