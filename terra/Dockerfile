@@ -35,7 +35,7 @@ RUN mkdir "${REPO_NAME}" \
 && cd .. \
 && pwd \
 && ls \
-&& ls '/${REPO_NAME}/*' \
+&& ls "/${REPO_NAME}/*" \
 && pip3 install -r "/${REPO_NAME}/terra/requirements.txt" \
 && pip3 install google-cloud-bigquery
 
