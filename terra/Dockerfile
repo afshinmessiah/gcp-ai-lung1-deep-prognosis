@@ -23,7 +23,7 @@ RUN apt-get install -y plastimatch
  && apt-get install -yq --no-install-recommends google-cloud-sdk
  
 ENV REPO_NAME deep-prognosis-code
-RUN mkdir "${REPO_NAME}"
+RUN mkdir "${REPO_NAME}" \
 && cd "${REPO_NAME}" \
 && git init \
 && git remote add -f origin https://github.com/afshinmessiah/gcp-ai-lung1-deep-prognosis.git \
