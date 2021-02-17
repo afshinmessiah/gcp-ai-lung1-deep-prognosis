@@ -78,7 +78,7 @@ task deep_prognosis_task
         ls -al
         python3 <<CODE
         import sys
-        sys.path.insert(1, './src')
+        sys.path.insert(1, '/deep-prognosis-code/terra/src')
         import os
         import subprocess
         import json
@@ -101,8 +101,8 @@ task deep_prognosis_task
         ct_nrrd_crop_path = os.path.join(output_dir, patient_id + '_ct_res_crop.nrrd')
         rt_nrrd_crop_path = os.path.join(output_dir, patient_id + '_rt_res_crop.nrrd')
         print('')
-        network_architect_json_path = 'models/architecture.json'
-        network_weights_path = 'models/wights.h5'
+        network_architect_json_path = '/deep-prognosis-code/terra/models/architecture.json'
+        network_weights_path = '/deep-prognosis-code/terra/models/wights.h5'
         patient_convert(dicom_ct_path, dicom_rt_path, output_dir,patient_id)
         patient_preprocess(ct_nrrd_path,rt_nrrd_path,ct_nrrd_crop_path,rt_nrrd_crop_path)
         inference = patient_inference(
