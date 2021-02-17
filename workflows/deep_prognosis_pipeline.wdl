@@ -40,7 +40,7 @@ workflow deep_prognosis_workflow {
         { 
             input: dicom_ct_list=flattened_inputs[i].INPUT_CT,
             dicom_rt_list=flattened_inputs[i].INPUT_RT,
-            output_dir="./" + src_bukcet + "/" + pid,
+            output_dir="./Output/" + src_bukcet + "/" + pid,
             pat_id=pid,
             dest_bucket_name=dest_bucket_name
         }
@@ -137,7 +137,7 @@ task deep_prognosis_task
 
     }
     output {
-        String destination = output_dir + "/" + output_dir
+        String destination = dest_bucket_path + "/" + output_dir
         # Object outtt = read_json('outputfiles.json')
         # Array[File] outputfiles = outtt.data
         # Array[File] all_files = read_lines('outputfiles.txt')
