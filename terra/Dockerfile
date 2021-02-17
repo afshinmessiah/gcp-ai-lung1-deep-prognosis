@@ -30,6 +30,7 @@ RUN git config core.sparseCheckout true
 RUN echo "terra/src" >> .git/info/sparse-checkout
 RUN echo "terra/models" >> .git/info/sparse-checkout
 RUN echo "terra/requirements.txt" >> .git/info/sparse-checkout
+RUN git pull origin afshin-branch
 RUN cd ..
 RUN pip3 install -r "/${REPO_NAME}/terra/requirements.txt"\
 && pip3 install google-cloud-bigquery
