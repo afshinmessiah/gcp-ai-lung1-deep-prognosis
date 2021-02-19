@@ -68,18 +68,5 @@ cohort_df = pd.read_csv(cohort_table_path)
 res_pat_dir_path = os.path.join(preproc_data_path, res_pat_dir_name)
 pat_df = cohort_df[cohort_df["PatientID"] == res_pat_dir_name]
 pat = pat_df["PatientID"].values[0]
+patient_preprocess( pat, res_pat_dir_path)
 
-## ----------------------------------------
-    
-# location where the tmp nrrd files (resampled CT/RTSTRUCT nrrd) should be saved
-# by the "export_res_nrrd_from_dicom" function found in preprocess.py
-res_ct_nrrd_path = os.path.join(res_pat_dir_path, pat + '_ct_resampled.nrrd')
-res_rt_nrrd_path = os.path.join(res_pat_dir_path, pat + '_rt_resampled.nrrd')
-
-# location where the nrrd files (cropped resampled CT/RTSTRUCT nrrd) should be saved
-# by the "export_com_subvolume" function found in preprocess.py
-ct_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_ct_res_crop.nrrd')
-rt_nrrd_crop_path = os.path.join(res_pat_dir_path, pat + '_rt_res_crop.nrrd')
-
-patient_preprocess(
-    res_ct_nrrd_path, res_rt_nrrd_path, ct_nrrd_crop_path, rt_nrrd_crop_path)

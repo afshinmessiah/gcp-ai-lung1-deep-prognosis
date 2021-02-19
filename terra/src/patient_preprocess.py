@@ -25,10 +25,18 @@ from my_lib.data_utils import *
 
   
 ## ----------------------------------------
-def patient_preprocess(ct_nrrd_path: str,
-                       rt_nrrd_path: str,
-                       ct_nrrd_crop_path: str,
-                       rt_nrrd_crop_path: str):
+def patient_preprocess(patient_id: str,
+                       res_dir_path: str,
+                       ):
+    # location where the tmp nrrd files (resampled CT/RTSTRUCT nrrd) should be saved
+    # by the "export_res_nrrd_from_dicom" function found in preprocess.py
+    ct_nrrd_path = os.path.join(res_dir_path, patient_id + '_ct_resampled.nrrd')
+    rt_nrrd_path = os.path.join(res_dir_path, patient_id + '_rt_resampled.nrrd')
+
+    # location where the nrrd files (cropped resampled CT/RTSTRUCT nrrd) should be saved
+    # by the "export_com_subvolume" function found in preprocess.py
+    ct_nrrd_crop_path = os.path.join(res_dir_path, patient_id + '_ct_res_crop.nrrd')
+    rt_nrrd_crop_path = os.path.join(res_dir_path, patient_id + '_rt_res_crop.nrrd')
     # sanity check
     assert(os.path.exists(ct_nrrd_path))
     assert(os.path.exists(rt_nrrd_path))
@@ -43,11 +51,14 @@ def patient_preprocess(ct_nrrd_path: str,
 
     com = compute_center_of_mass(seg)
     com_int = [int(coord) for coord in com]
-
+    whole_ct_png_path = os.path.join(res_dir_path, 'qa_' + patient_id + '_whole_ct_com.png')
+    crop_ct_png_path = os.path.join(res_dir_path, 'qa_' + patient_id + '_crop_ct_com.png')
+    ## ----------------------------------------
+    
     # export the CoM slice (CT + RTSTRUCT) for quality control
     export_png_slice(input_volume=vol,
                     input_segmask=seg,
-                    fig_out_path=os.path.join(pat_dir_path, 'qa_' + pat + '_whole_ct_com.png'),
+                    fig_out_path=whole_ct_png_path,
                     fig_dpi=220,
                     lon_slice_idx=com_int[0],
                     cor_slice_idx=com_int[1],
@@ -59,8 +70,8 @@ def patient_preprocess(ct_nrrd_path: str,
         proc_log = export_com_subvolume(ct_nrrd_path=ct_nrrd_path, 
                                         rt_nrrd_path=rt_nrrd_path, 
                                         crop_size=(150, 150, 150), 
-                                        output_dir=pat_dir_path,
-                                        pat_id=pat,
+                                        output_dir=res_dir_path,
+                                        pat_id=patient_id,
                                         z_first=True, 
                                         rm_orig=True)
     except Exception as e:
@@ -68,7 +79,8 @@ def patient_preprocess(ct_nrrd_path: str,
         sys.exit(-1)
 
     # log CoM information
-    com_log_path = os.path.join(pat_dir_path, pat + '_com_log.json')
+    
+    com_log_path = os.path.join(res_dir_path, patient_id + '_com_log.json')
     com_log_dict = {k : v for (k, v) in proc_log.items() if "com_int" in k}
     
     with open(com_log_path, 'w') as json_file:
@@ -95,7 +107,7 @@ def patient_preprocess(ct_nrrd_path: str,
     # export the cropped subvolume CoM slice (CT + RTSTRUCT) for quality control
     export_png_slice(input_volume=vol_crop,
                     input_segmask=seg_crop,
-                    fig_out_path=os.path.join(pat_dir_path, 'qa_' + pat + '_crop_ct_com.png'),
+                    fig_out_path=crop_ct_png_path,
                     fig_dpi=220,
                     lon_slice_idx=75,
                     cor_slice_idx=75,

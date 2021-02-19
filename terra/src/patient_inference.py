@@ -56,12 +56,12 @@ def patient_inference(network_architect_json_path: str,
     # df_keys = ['PatientID', 'ctStudyInstanceUID', 'ctSeriesInstanceUID',
     #         'rtstructSeriesInstanceUID', 'prob_logit_0', 'prob_logit_0']
 
-    # data = {k : list() for k in df_keys}
+    # # data = {k : list() for k in df_keys}
 
-    # analysis results
-    res_df = pd.DataFrame(data, dtype = object)
-    res_csv_name = 'inference_res_' + patient_preproc_folder + '.csv'
-    res_csv_path = os.path.join(preprocessed_output_path, res_csv_name)
+    # # analysis results
+    # res_df = pd.DataFrame(data, dtype = object)
+    # res_csv_name = 'inference_res_' + patient_preproc_folder + '.csv'
+    # res_csv_path = os.path.join(preprocessed_output_path, res_csv_name)
 
     ## ----------------------------------------
 

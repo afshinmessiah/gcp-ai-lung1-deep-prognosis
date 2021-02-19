@@ -96,15 +96,10 @@ task deep_prognosis_task
         print('out dir abs is ', output_dir)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        ct_nrrd_path = os.path.join(output_dir, patient_id + '_ct_resampled.nrrd')
-        rt_nrrd_path = os.path.join(output_dir, patient_id + '_rt_resampled.nrrd')
-        ct_nrrd_crop_path = os.path.join(output_dir, patient_id + '_ct_res_crop.nrrd')
-        rt_nrrd_crop_path = os.path.join(output_dir, patient_id + '_rt_res_crop.nrrd')
-        print('')
         network_architect_json_path = '/deep-prognosis-code/terra/models/architecture.json'
         network_weights_path = '/deep-prognosis-code/terra/models/wights.h5'
         patient_convert(dicom_ct_path, dicom_rt_path, output_dir,patient_id)
-        patient_preprocess(ct_nrrd_path,rt_nrrd_path,ct_nrrd_crop_path,rt_nrrd_crop_path)
+        patient_preprocess(patient_id, output_dir)
         inference = patient_inference(
             network_architect_json_path,
             network_weights_path,
@@ -133,7 +128,7 @@ task deep_prognosis_task
     runtime {
         # docker: "biocontainers/plastimatch:v1.7.4dfsg.1-2-deb_cv1"
         docker: "afshinmha/deep-prognosis:lungs"
-        memory: "4GB"
+        memory: "8GB"
 
     }
     output {
