@@ -98,7 +98,7 @@ task deep_prognosis_task
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         network_architect_json_path = '/deep-prognosis-code/terra/models/architecture.json'
-        network_weights_path = '/deep-prognosis-code/terra/models/wights.h5'
+        network_weights_path = '/deep-prognosis-code/terra/models/weights.h5'
         patient_convert(dicom_ct_path, dicom_rt_path, output_dir,patient_id)
         patient_preprocess(patient_id, output_dir)
         inference = patient_inference(
