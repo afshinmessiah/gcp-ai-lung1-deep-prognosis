@@ -76,6 +76,7 @@ task deep_prognosis_task
         ls -al
         cd ~
         ls -al
+        cat "/deep-prognosis-code/terra/src/patient_preprocess.py"
         python3 <<CODE
         import sys
         sys.path.insert(1, '/deep-prognosis-code/terra/src')
