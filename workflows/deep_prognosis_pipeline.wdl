@@ -129,7 +129,7 @@ task deep_prognosis_task
 
     }
     output {
-        Object out_ = read_json("ouput.json")
+        Object out_ = read_json("output.json")
     }
     meta {
         author: "Afshin"
