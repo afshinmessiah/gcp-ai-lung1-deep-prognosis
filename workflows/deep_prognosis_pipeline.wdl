@@ -42,13 +42,14 @@ workflow deep_prognosis_workflow {
             pat_id=pid,
             dest_bucket_name=dest_bucket_name
         }
+        Object prog_out = read_json(deep_prognosis_task.out_)
         Object OutputSt = { 
             "Patient_id": pid,
             "ctSeriesInstanceUID":flattened_inputs[i].CTSERIESINSTANCEUID,
             "rtstructSeriesInstanceUID":flattened_inputs[i].RTSTRUCTSERIESINSTANCEUID,
-            "prob_logit_0": deep_prognosis_task.out_.prob_logit_0,
-            "prob_logit_1": deep_prognosis_task.out_.prob_logit_1,
-            "output": deep_prognosis_task.out_.destination,
+            "prob_logit_0": prog_out.prob_logit_0,
+            "prob_logit_1": prog_out.prob_logit_1,
+            "output": prog_out.destination,
         } 
 
     }
@@ -128,7 +129,7 @@ task deep_prognosis_task
 
     }
     output {
-        Object out_ = read_json("ouput.json")
+        File out_ = "output.json"
     }
     meta {
         author: "Afshin"
