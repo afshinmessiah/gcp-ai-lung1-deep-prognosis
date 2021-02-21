@@ -38,7 +38,7 @@ workflow deep_prognosis_workflow {
         { 
             input: dicom_ct_list=flattened_inputs[i].INPUT_CT,
             dicom_rt_list=flattened_inputs[i].INPUT_RT,
-            output_dir="./Output/" + src_bukcet + "/" + pid,
+            output_dir_bucket="./Output/" + src_bukcet,
             pat_id=pid,
             dest_bucket_name=dest_bucket_name
         }
@@ -69,13 +69,14 @@ task deep_prognosis_task
     input { 
         Array[File] dicom_ct_list
         Array[File] dicom_rt_list
-        String output_dir
+        String output_dir_bucket
         String pat_id
         String dest_bucket_name
     }
     String dest_bucket_path = 'gs://' + dest_bucket_name
     String ct_interpolation = 'linear'
     String output_dtype = "int"
+    String output_dir_pat = output_dir_bucket + '/' + pat_id
     Float prob_logit_0 = 0.0
     Float prob_logit_1 = 0.0
     command
@@ -96,7 +97,7 @@ task deep_prognosis_task
         print('dicom_rt_path = {}'.format(dicom_rt_path))
         destination_bucket_name = '~{dest_bucket_path}'
         patient_id = '~{pat_id}'
-        output_dir = os.path.abspath('~{output_dir}')
+        output_dir = os.path.abspath('~{output_dir_pat}')
         print('out dir abs is ', output_dir)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -115,12 +116,12 @@ task deep_prognosis_task
         dest1 = os.path.join(dest2, level1) 
 
         inference['destination'] = dest1 
+        inference['output_parent'] = os.path.dirname(output_dir) 
         filename = 'output.json'
         with open(filename, 'w') as fp:
             json.dump(inference, fp, indent=4)
         CODE
-        gsutil cp -r '~{output_dir}/..' '~{dest_bucket_path}'
-        
+        gsutil cp -r '~{output_dir_bucket}' '~{dest_bucket_path}'
     >>>
     runtime {
         # docker: "biocontainers/plastimatch:v1.7.4dfsg.1-2-deb_cv1"
