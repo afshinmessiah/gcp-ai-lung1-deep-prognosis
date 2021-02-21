@@ -29,9 +29,7 @@ workflow deep_prognosis_workflow {
         Array[Object] inputs = tmp.data
     }
     Array[Object] flattened_inputs = flatten(inputs)
-    # File jjjjsss = write_object(tmp)
-    # Array[Object] inputs = tmp.data
-    # File innnppp = write_objects(inputs)
+    
     scatter (i in range(length(flattened_inputs)))
     {
         String pid = flattened_inputs[i].PATIENTID
@@ -44,6 +42,13 @@ workflow deep_prognosis_workflow {
             pat_id=pid,
             dest_bucket_name=dest_bucket_name
         }
+        Object OutputSt = { 
+            "Patient_id": pid,
+            "ctSeriesInstanceUID":flattened_inputs[i].CTSERIESINSTANCEUID,
+            "rtstructSeriesInstanceUID":flattened_inputs[i].RTSTRUCTSERIESINSTANCEUID,
+            "prob_logit_0": deep_prognosis_task.inference_out["prob_logit_0"],
+            "prob_logit_1": deep_prognosis_task.inference_out["prob_logit_1"],
+        } 
 
     }
    
@@ -70,14 +75,12 @@ task deep_prognosis_task
     String dest_bucket_path = 'gs://' + dest_bucket_name
     String ct_interpolation = 'linear'
     String output_dtype = "int"
+    Map[String, Float] inference_map= {
+            "prob_logit_0": 0,
+            "prob_logit_1": 0,
+        }
     command
     <<<
-        pwd
-        ls -al
-        cd ~
-        ls -al
-        cat "/deep-prognosis-code/terra/src/patient_preprocess.py"
-        python3 <<CODE
         import sys
         sys.path.insert(1, '/deep-prognosis-code/terra/src')
         import os
@@ -106,25 +109,11 @@ task deep_prognosis_task
             network_weights_path,
             output_dir,
             patient_id)
-        # export_res_nrrd_from_dicom(
-        #     dicom_ct_path,
-        #     dicom_rt_path,
-        #     '~{output_dir}', '~{pat_id}',
-        #     '~{ct_interpolation}', '~{output_dtype}'
-        # )
-        # output_file_list = Find('~{output_dir}')
-        # with open('outputfiles.json', 'w') as fp:
-        #     json.dump({'data':output_file_list}, fp, indent=4)
-        # print('this is all {} files\n {}'.format(
-        #     len(output_file_list), json.dumps(output_file_list, indent=4)))
-        # out_text = ''
-        # for f in output_file_list:
-        #     out_text +='{}\n'.format(f)
-        # text_file = open('outputfiles.txt', "w")
-        # text_file.write(out_text)
-        # text_file.close()
+        '~{inference_map}[prob_logit_0]' = inference["prob_logit_0"]
+        '~{inference_map}[prob_logit_1]' = inference["prob_logit_1"]
         CODE
         gsutil cp -r '~{output_dir}' '~{dest_bucket_path}'
+        
     >>>
     runtime {
         # docker: "biocontainers/plastimatch:v1.7.4dfsg.1-2-deb_cv1"
@@ -134,11 +123,8 @@ task deep_prognosis_task
     }
     output {
         String destination = dest_bucket_path + "/" + output_dir
-        # Object outtt = read_json('outputfiles.json')
-        # Array[File] outputfiles = outtt.data
-        # Array[File] all_files = read_lines('outputfiles.txt')
-        # Array[File] files_1 = glob(output_dir + "/*")
-        # Array[File] files_2 = glob(output_dir + "/*/*")
+        Map [String, Float] inference_out = inference_map
+        
     }
     meta {
         author: "Afshin"
