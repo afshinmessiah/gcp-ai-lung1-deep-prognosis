@@ -46,14 +46,15 @@ workflow deep_prognosis_workflow {
             "Patient_id": pid,
             "ctSeriesInstanceUID":flattened_inputs[i].CTSERIESINSTANCEUID,
             "rtstructSeriesInstanceUID":flattened_inputs[i].RTSTRUCTSERIESINSTANCEUID,
-            "prob_logit_0": deep_prognosis_task.prob0,
-            "prob_logit_1": deep_prognosis_task.prob1,
+            "prob_logit_0": deep_prognosis_task.out_.prob_logit_0,
+            "prob_logit_1": deep_prognosis_task.out_.prob_logit_1,
+            "output": deep_prognosis_task.out_.destination,
         } 
 
     }
    
     output {
-        Array[String] dest = deep_prognosis_task.destination
+        Array[Object] wf_output =  OutputSt
         # Array[File] w_output1 = flatten(deep_prognosis_task.files_1)
         # Array[File] w_output2 = flatten(deep_prognosis_task.files_2)
         # File jj = jjjjsss
@@ -107,10 +108,17 @@ task deep_prognosis_task
             network_weights_path,
             output_dir,
             patient_id)
-        '~{prob_logit_0}' = inference["prob_logit_0"]
-        '~{prob_logit_1}' = inference["prob_logit_1"]
+        level1 = os.path.basename(output_dir)
+        level2 = os.path.basename(os.path.dirname(output_dir))
+        dest2 = os.path.join(destination_bucket_name, level2) 
+        dest1 = os.path.join(dest2, level1) 
+
+        inference['destination'] = dest1 
+        filename = 'output.json'
+        with open(filename, 'w') as fp:
+            json.dump(inference, fp, indent=4)
         CODE
-        gsutil cp -r '~{output_dir}' '~{dest_bucket_path}'
+        gsutil cp -r '~{output_dir}/..' '~{dest_bucket_path}'
         
     >>>
     runtime {
@@ -120,9 +128,7 @@ task deep_prognosis_task
 
     }
     output {
-        String destination = dest_bucket_path + "/" + output_dir
-        Float prob0 = prob_logit_0
-        Float prob1 = prob_logit_1  
+        Object out_ = read_json("ouput.json")
     }
     meta {
         author: "Afshin"
