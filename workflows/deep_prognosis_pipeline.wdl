@@ -46,8 +46,8 @@ workflow deep_prognosis_workflow {
             "Patient_id": pid,
             "ctSeriesInstanceUID":flattened_inputs[i].CTSERIESINSTANCEUID,
             "rtstructSeriesInstanceUID":flattened_inputs[i].RTSTRUCTSERIESINSTANCEUID,
-            "prob_logit_0": deep_prognosis_task.inference_out["prob_logit_0"],
-            "prob_logit_1": deep_prognosis_task.inference_out["prob_logit_1"],
+            "prob_logit_0": deep_prognosis_task.prob0,
+            "prob_logit_1": deep_prognosis_task.prob1,
         } 
 
     }
@@ -75,10 +75,8 @@ task deep_prognosis_task
     String dest_bucket_path = 'gs://' + dest_bucket_name
     String ct_interpolation = 'linear'
     String output_dtype = "int"
-    Map[String, Float] inference_map= {
-            "prob_logit_0": 0,
-            "prob_logit_1": 0,
-        }
+    Float prob_logit_0 = 0.0
+    Float prob_logit_1 = 0.0
     command
     <<<
         import sys
@@ -109,8 +107,8 @@ task deep_prognosis_task
             network_weights_path,
             output_dir,
             patient_id)
-        '~{inference_map}[prob_logit_0]' = inference["prob_logit_0"]
-        '~{inference_map}[prob_logit_1]' = inference["prob_logit_1"]
+        '~{prob_logit_0}' = inference["prob_logit_0"]
+        '~{prob_logit_1}' = inference["prob_logit_1"]
         CODE
         gsutil cp -r '~{output_dir}' '~{dest_bucket_path}'
         
@@ -123,8 +121,8 @@ task deep_prognosis_task
     }
     output {
         String destination = dest_bucket_path + "/" + output_dir
-        Map [String, Float] inference_out = inference_map
-        
+        Float prob0 = prob_logit_0
+        Float prob1 = prob_logit_1  
     }
     meta {
         author: "Afshin"
