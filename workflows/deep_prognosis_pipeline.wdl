@@ -126,7 +126,7 @@ task deep_prognosis_task
     runtime {
         # docker: "biocontainers/plastimatch:v1.7.4dfsg.1-2-deb_cv1"
         docker: "afshinmha/deep-prognosis:lungs"
-        memory: "8GB"
+        memory: "16GB"
 
     }
     output {
